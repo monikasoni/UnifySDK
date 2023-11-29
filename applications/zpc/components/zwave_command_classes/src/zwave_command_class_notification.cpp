@@ -349,6 +349,17 @@ static sl_status_t
     }
   }
 
+  // Delete notification_types_node when there are no supported notification types.
+  if (number_of_supported_notification_types == 0) {
+    sl_status_t status
+     = attribute_store_delete_node(supported_notification_types_node);
+    if (status != SL_STATUS_OK) {
+      sl_log_debug(LOG_TAG, "Failed to remove node %u",
+                   supported_notification_types_node);
+    }
+    return SL_STATUS_OK;
+  }
+
   // Update the notification types reported values in the Attribute Store
   attribute_store_node_t supported_notification_types_node
     = attribute_store_get_first_child_by_type(
